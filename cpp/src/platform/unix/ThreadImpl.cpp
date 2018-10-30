@@ -117,7 +117,16 @@ bool ThreadImpl::Terminate
 
 	//m_hThread = NULL;
 	m_bIsRunning = false;
-	pthread_cancel( m_hThread );
+
+	/* XXX: pthread_setcancelstate and associated constant
+	 * are not available in Bionic, the Android pthread
+	 * implementation
+	 *
+	 * TODO: Add Android platform mecanism and replace the
+	 * pthread_cancel calls with signals
+	 */
+	// pthread_cancel( m_hThread );
+	pthread_kill(m_hThread, SIGUSR1);
 	pthread_join( m_hThread, &data );
 
 	return true;

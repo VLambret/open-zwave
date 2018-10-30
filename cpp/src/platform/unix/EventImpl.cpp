@@ -208,12 +208,20 @@ bool EventImpl::Wait
             
 			while( !m_isSignaled )
 			{
-				int oldstate;
-				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+				/* XXX: pthread_setcancelstate and associated constant
+				 * are not available in Bionic, the Android pthread
+				 * implementation
+				 *
+				 * TODO: Add Android platform mecanism and replace the
+				 * pthread_cancel calls with signals
+				 */
+
+				// int oldstate;
+				// pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
 				err = pthread_cond_timedwait( &m_condition, &m_lock, &abstime );
 
-				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+				// pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
 				if( err == ETIMEDOUT )
 				{
@@ -236,12 +244,20 @@ bool EventImpl::Wait
 		{
 			while( !m_isSignaled )
 			{
-				int oldstate;
-				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+				/* XXX: pthread_setcancelstate and associated constant
+				 * are not available in Bionic, the Android pthread
+				 * implementation
+				 *
+				 * TODO: Add Android platform mecanism and replace the
+				 * pthread_cancel calls with signals
+				 */
+
+				// int oldstate;
+				// pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
 				err = pthread_cond_wait( &m_condition, &m_lock );
 
-				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+				// pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
 				if( err != 0 )
 				{

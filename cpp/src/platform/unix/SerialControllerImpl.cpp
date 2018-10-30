@@ -341,7 +341,9 @@ void SerialControllerImpl::Read
 		{
 			struct timeval *whenp;
 			fd_set rds, eds;
-			int oldstate;
+
+			/* XXX: See below */
+			// int oldstate;
 
 			FD_ZERO( &rds );
 			FD_SET( m_hSerialController, &rds );
@@ -349,9 +351,17 @@ void SerialControllerImpl::Read
 			FD_SET( m_hSerialController, &eds );
 			whenp = NULL;
 
-			pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+			/* XXX: pthread_setcancelstate and associated constant
+			 * are not available in Bionic, the Android pthread
+			 * implementation
+			 *
+			 * TODO: Add Android platform mecanism and replace the
+			 * pthread_cancel calls with signals
+			 */
+
+			// pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 			err = select( m_hSerialController + 1, &rds, NULL, &eds, whenp );
-			pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+			// pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 		} while( err <= 0 );
 	}
 }
